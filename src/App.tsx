@@ -1,7 +1,7 @@
-
+import {TransactionDashboard} from './components/TransactionDashboard';
 
 function App() {
-  return (<></>
+  return (<TransactionDashboard />
   );
 }
 
