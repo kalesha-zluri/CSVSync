@@ -7,6 +7,7 @@ import {
 import { api } from "../api";
 import { toast, Toaster } from "react-hot-toast";
 import { Plus } from "lucide-react";
+import { FileUpload } from "./FileUpload";
 
 export function TransactionDashboard() {
   const [loading, setLoading] = useState(true);
@@ -50,6 +51,7 @@ export function TransactionDashboard() {
         toast.error(response.error);
       } else {
         toast.success(response.message);
+        fetchTransactions(pagination.currentPage);
       }
     } catch (error: any) {
       console.error("Upload error", error);
@@ -115,12 +117,14 @@ export function TransactionDashboard() {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-900">CSVSync</h1>
             <div className="flex space-x-4">
-              <button 
-              onClick ={() => {
-                setSelectedTransaction(undefined);
-                setShowForm(true);
-              }}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+              <FileUpload onUpload={handleFileUpload} />
+              <button
+                onClick={() => {
+                  setSelectedTransaction(undefined);
+                  setShowForm(true);
+                }}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Transaction
               </button>
@@ -129,18 +133,24 @@ export function TransactionDashboard() {
 
           {loading ? (
             <div className="flex justify-center  items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+              <div className="relative">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600"></div>
+                <div className="absolute inset-0 m-auto h-8 w-8 rounded-full border-t-2 border-b-2 border-transparent border-gray-300"></div>
+              </div>
             </div>
-          ):(
+          ) : (
             <>
-            <div className="bg-white shadow rounded-lg">
-              <p>Transaction List comes here</p>
-              <p>Pagination comes here</p>
-            </div>
+              <div className="bg-white shadow rounded-lg">
+                <p>Transaction List comes here</p>
+                <p>Pagination comes here</p>
+              </div>
             </>
           )}
         </div>
       </div>
+      {showForm && (
+        <p>Transaction form comes here</p>
+      )}
     </div>
   );
 }
