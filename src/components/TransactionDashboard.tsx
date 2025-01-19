@@ -8,6 +8,7 @@ import { api } from "../api";
 import { toast, Toaster } from "react-hot-toast";
 import { Plus } from "lucide-react";
 import { FileUpload } from "./FileUpload";
+import { TransactionList } from "./TransactionList";
 
 export function TransactionDashboard() {
   const [loading, setLoading] = useState(true);
@@ -47,6 +48,7 @@ export function TransactionDashboard() {
   const handleFileUpload = async (file: File) => {
     try {
       const response = await api.uploadCSV(file);
+      console.log(response);
       if (response.error) {
         toast.error(response.error);
       } else {
@@ -141,7 +143,14 @@ export function TransactionDashboard() {
           ) : (
             <>
               <div className="bg-white shadow rounded-lg">
-                <p>Transaction List comes here</p>
+                <TransactionList
+                transactions={transactions}
+                onEdit={(transaction) => {
+                  setSelectedTransaction(transaction);
+                  setShowForm(true);
+                }}
+                onDelete={handleDeleteTransaction}
+                />
                 <p>Pagination comes here</p>
               </div>
             </>
