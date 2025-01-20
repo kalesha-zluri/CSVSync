@@ -9,6 +9,8 @@ import { toast, Toaster } from "react-hot-toast";
 import { Plus } from "lucide-react";
 import { FileUpload } from "./FileUpload";
 import { TransactionList } from "./TransactionList";
+import { Pagination } from "./Pagination";
+import { TransactionForm } from "./TransactionForm";
 
 export function TransactionDashboard() {
   const [loading, setLoading] = useState(true);
@@ -18,15 +20,22 @@ export function TransactionDashboard() {
     totalPages: 1,
     totalCount: 0,
   });
+  const [transactionsPerPage, setTransactionsPerPage] = useState(10);
   const [showForm, setShowForm] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<
     Transaction | undefined
   >();
 
-  const fetchTransactions = async (page: number = 1) => {
+  const fetchTransactions = async (
+    page: number = 1,
+    limit: number = transactionsPerPage
+  ) => {
     try {
       setLoading(true);
-      const response: TransactionResponse = await api.getTransactions(page);
+      const response: TransactionResponse = await api.getTransactions(
+        page,
+        limit
+      );
       setTransactions(response.transactions);
       setPagination({
         currentPage: response.currentPage,
@@ -43,7 +52,7 @@ export function TransactionDashboard() {
 
   useEffect(() => {
     fetchTransactions();
-  }, []);
+  }, [transactionsPerPage]);
 
   const handleFileUpload = async (file: File) => {
     try {
@@ -144,21 +153,36 @@ export function TransactionDashboard() {
             <>
               <div className="bg-white shadow rounded-lg">
                 <TransactionList
-                transactions={transactions}
-                onEdit={(transaction) => {
-                  setSelectedTransaction(transaction);
-                  setShowForm(true);
-                }}
-                onDelete={handleDeleteTransaction}
+                  transactions={transactions}
+                  onEdit={(transaction) => {
+                    setSelectedTransaction(transaction);
+                    setShowForm(true);
+                  }}
+                  onDelete={handleDeleteTransaction}
                 />
-                <p>Pagination comes here</p>
+                <Pagination
+                  currentPage={pagination.currentPage}
+                  totalPages={pagination.totalPages}
+                  transactionsPerPage={transactionsPerPage}
+                  onPageChange={(page) => fetchTransactions(page)}
+                  onPageSizeChange={(size) => setTransactionsPerPage(size)}
+                />
               </div>
             </>
           )}
         </div>
       </div>
       {showForm && (
-        <p>Transaction form comes here</p>
+        <TransactionForm
+          transaction={selectedTransaction}
+          onSubmit={
+            selectedTransaction ? handleEditTransaction : handleAddTransaction
+          }
+          onClose={() => {
+            setShowForm(false);
+            setSelectedTransaction(undefined);
+          }}
+        />
       )}
     </div>
   );
