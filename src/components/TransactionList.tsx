@@ -49,7 +49,7 @@ export function TransactionList({ transactions, onEdit, onDelete }: Props) {
               >
                 {transaction.description}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 ">
                 {parseFloat(transaction.amount).toLocaleString("en-US", {
                   style: "currency",
                   currency: transaction.currency || "USD",

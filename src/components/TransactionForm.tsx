@@ -53,6 +53,7 @@ export function TransactionForm({ transaction, onSubmit, onClose }: Props) {
               Description
             </label>
             <input
+              placeholder="e.g. Transaction 1"
               type="text"
               value={formData.description}
               onChange={(e) =>
@@ -73,6 +74,7 @@ export function TransactionForm({ transaction, onSubmit, onClose }: Props) {
                 Amount
               </label>
               <input
+                placeholder="e.g. 1000"
                 type="number"
                 value={formData.amount}
                 onChange={(e) =>

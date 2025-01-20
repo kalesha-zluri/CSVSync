@@ -27,7 +27,7 @@ export function TransactionDashboard() {
   >();
 
   const fetchTransactions = async (
-    page: number = 1,
+    page: number = pagination.currentPage,
     limit: number = transactionsPerPage
   ) => {
     try {
@@ -56,6 +56,7 @@ export function TransactionDashboard() {
 
   const handleFileUpload = async (file: File) => {
     try {
+      setLoading(true);
       const response = await api.uploadCSV(file);
       console.log(response);
       if (response.error) {
@@ -66,7 +67,9 @@ export function TransactionDashboard() {
       }
     } catch (error: any) {
       console.error("Upload error", error);
-      toast.error(error.message || "Failed to upload file");
+      toast.error("Failed to upload file");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -126,7 +129,7 @@ export function TransactionDashboard() {
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">CSVSync</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Transactions</h1>
             <div className="flex space-x-4">
               <FileUpload onUpload={handleFileUpload} />
               <button
@@ -146,7 +149,7 @@ export function TransactionDashboard() {
             <div className="flex justify-center  items-center h-64">
               <div className="relative">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600"></div>
-                <div className="absolute inset-0 m-auto h-8 w-8 rounded-full border-t-2 border-b-2 border-transparent border-gray-300"></div>
+                <div className="absolute inset-0 m-auto h-8 w-8 rounded-full border-t-2 border-b-2 border-transparent border-gray-400"></div>
               </div>
             </div>
           ) : (
