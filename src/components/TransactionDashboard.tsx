@@ -159,7 +159,7 @@ export function TransactionDashboard() {
 
     if (
       !window.confirm(
-        `Are you sure you want to delete ${selectedIds.length} transactions?`
+        `Are you sure you want to delete selected transactions?`
       )
     )
       return;
@@ -189,7 +189,7 @@ export function TransactionDashboard() {
                   onClick={handleDeleteSelected}
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700"
                 >
-                  Delete Selected ({selectedIds.length})
+                  Delete
                 </button>
               )}
               <FileUpload onUpload={handleFileUpload} />
