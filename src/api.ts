@@ -64,5 +64,17 @@ export const api = {
         } catch(error){
             throw error;
         }
+    },
+
+    async deleteMultipleTransactions(ids: number[]) {
+    try {
+      const response = await axiosInstance.delete('/delete-multiple', {
+        data: { ids }
+      });
+      return response.data;
+      return response.data;
+    } catch (error) {
+      throw error;
     }
+  }
 };

@@ -27,6 +27,7 @@ export function TransactionDashboard() {
   const [selectedTransaction, setSelectedTransaction] = useState<
     Transaction | undefined
   >();
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const fetchTransactions = async (
     page: number = pagination.currentPage,
@@ -44,7 +45,6 @@ export function TransactionDashboard() {
         totalPages: response.totalPages,
         totalCount: response.totalCount,
       });
-      toast.success("Transactions fetched successfully");
     } catch (error) {
       console.error("Fetch error", error);
       toast.error("Failed to fetch transactions");
@@ -63,16 +63,16 @@ export function TransactionDashboard() {
       const response = await api.uploadCSV(file);
       console.log(response);
       toast.success(response.message);
-      fetchTransactions(pagination.currentPage); 
+      fetchTransactions(pagination.currentPage);
     } catch (error: any) {
       if (!(error instanceof AxiosError)) {
         toast.error("Failed to upload file");
         console.error(error);
         return;
       }
-      const {response,status} = error
-      if(status === 400){
-        toast.error(response?.data?.error+"Check the downloaded file");
+      const { response, status } = error;
+      if (status === 400) {
+        toast.error(response?.data?.error + " Check the downloaded file for errors");
         // Handle error data and trigger CSV download
         if (response?.data?.data && response.data.data.length > 0) {
           const csvContent = convertErrorsToCSV(response.data.data);
@@ -96,12 +96,11 @@ export function TransactionDashboard() {
         console.error(error);
         return;
       }
-      const {response,status} = error
-      if(status === 400){
+      const { response, status } = error;
+      if (status === 400) {
         toast.error(response?.data?.error || "Failed to add transaction");
       }
     }
-
   };
 
   const handleEditTransaction = async (data: TransactionFormData) => {
@@ -118,8 +117,8 @@ export function TransactionDashboard() {
         console.error(error);
         return;
       }
-      const {response,status} = error
-      if(status === 400){
+      const { response, status } = error;
+      if (status === 400) {
         toast.error(response?.data?.error || "Failed to update transaction");
       }
     }
@@ -138,20 +137,61 @@ export function TransactionDashboard() {
         console.error(error);
         return;
       }
-      const {response,status} = error
-      if(status === 400){
+      const { response, status } = error;
+      if (status === 400) {
         toast.error(response?.data?.error || "Failed to delete transaction");
       }
     }
   };
+
+  const handleSelect = (id: number) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAll = (ids: number[]) => {
+    setSelectedIds(ids);
+  };
+
+  const handleDeleteSelected = async () => {
+    if (!selectedIds.length) return;
+
+    if (
+      !window.confirm(
+        `Are you sure you want to delete ${selectedIds.length} transactions?`
+      )
+    )
+      return;
+
+    try {
+      const response = await api.deleteMultipleTransactions(selectedIds);
+      toast.success(response.message);
+      setSelectedIds([]);
+      fetchTransactions(pagination.currentPage);
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Failed to delete transactions"
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Toaster position="top-center" />
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">Transactions</h1>
+            <h1 className="text-3xl font-bold text-gray-700 font-semibold font-semibold">Transactions</h1>
             <div className="flex space-x-4">
+              {selectedIds.length > 0 && (
+                <button
+                  onClick={handleDeleteSelected}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700"
+                >
+                  Delete Selected ({selectedIds.length})
+                </button>
+              )}
               <FileUpload onUpload={handleFileUpload} />
               <button
                 onClick={() => {
@@ -183,6 +223,9 @@ export function TransactionDashboard() {
                     setShowForm(true);
                   }}
                   onDelete={handleDeleteTransaction}
+                  selectedIds={selectedIds}
+                  onSelect={handleSelect}
+                  onSelectAll={handleSelectAll}
                 />
                 <Pagination
                   currentPage={pagination.currentPage}

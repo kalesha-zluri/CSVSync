@@ -37,6 +37,7 @@ export function TransactionForm({ transaction, onSubmit, onClose }: Props) {
       <div className="relative bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
         <button
           onClick={onClose}
+          aria-label="close"
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-500"
         >
           <X className="h-6 w-6" />
@@ -49,10 +50,12 @@ export function TransactionForm({ transaction, onSubmit, onClose }: Props) {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Description */}
           <div className="border border-gray-300 rounded-md p-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label htmlFor="description"
+            className="block text-sm font-medium text-gray-700">
               Description
             </label>
             <input
+              id="description"
               placeholder="e.g. Transaction 1"
               type="text"
               value={formData.description}
@@ -70,10 +73,13 @@ export function TransactionForm({ transaction, onSubmit, onClose }: Props) {
           {/* Currency and Amount */}
           <div className="flex space-x-4">
             <div className="flex-1 border border-gray-300 rounded-md p-3">
-              <label className="block text-sm font-medium text-gray-700">
+              <label 
+              htmlFor="amount"
+              className="block text-sm font-medium text-gray-700">
                 Amount
               </label>
               <input
+              id="amount"
                 placeholder="e.g. 1000"
                 type="number"
                 value={formData.amount}
@@ -86,10 +92,13 @@ export function TransactionForm({ transaction, onSubmit, onClose }: Props) {
             </div>
 
             <div className="flex-1 border border-gray-300 rounded-md p-3">
-              <label className="block text-sm font-medium text-gray-700">
+              <label 
+              htmlFor="currency"
+              className="block text-sm font-medium text-gray-700">
                 Currency
               </label>
               <select
+              id="currency"
                 value={formData.currency}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, currency: e.target.value }))
@@ -105,10 +114,13 @@ export function TransactionForm({ transaction, onSubmit, onClose }: Props) {
 
           {/* Date */}
           <div className="border border-gray-300 rounded-md p-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label 
+            htmlFor="date"
+            className="block text-sm font-medium text-gray-700">
               Date
             </label>
             <input
+              id="date"
               type="date"
               value={formData.date.split("-").reverse().join("-")}
               onChange={(e) => {
