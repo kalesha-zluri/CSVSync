@@ -12,6 +12,7 @@ import { FileUpload } from "./FileUpload";
 import { TransactionList } from "./TransactionList";
 import { Pagination } from "./Pagination";
 import { TransactionForm } from "./TransactionForm";
+import { convertErrorsToCSV, triggerDownloadBlob } from "../utils/csvDownload";
 
 export function TransactionDashboard() {
   const [loading, setLoading] = useState(true);
@@ -71,7 +72,12 @@ export function TransactionDashboard() {
       }
       const {response,status} = error
       if(status === 400){
-        toast.error(response?.data?.error || "Failed to upload transactions");
+        toast.error(response?.data?.error+"Check the downloaded file");
+        // Handle error data and trigger CSV download
+        if (response?.data?.data && response.data.data.length > 0) {
+          const csvContent = convertErrorsToCSV(response.data.data);
+          triggerDownloadBlob(csvContent, "upload_errors.csv");
+        }
       }
     } finally {
       setLoading(false);
@@ -140,7 +146,7 @@ export function TransactionDashboard() {
   };
   return (
     <div className="min-h-screen bg-gray-100">
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="flex justify-between items-center mb-6">
