@@ -4,6 +4,7 @@ import {
   TransactionFormData,
   TransactionResponse,
 } from "../types";
+import { AxiosError } from "axios";
 import { api } from "../api";
 import { toast, Toaster } from "react-hot-toast";
 import { Plus } from "lucide-react";
@@ -42,6 +43,7 @@ export function TransactionDashboard() {
         totalPages: response.totalPages,
         totalCount: response.totalCount,
       });
+      toast.success("Transactions fetched successfully");
     } catch (error) {
       console.error("Fetch error", error);
       toast.error("Failed to fetch transactions");
@@ -59,15 +61,18 @@ export function TransactionDashboard() {
       setLoading(true);
       const response = await api.uploadCSV(file);
       console.log(response);
-      if (response.error) {
-        toast.error(response.error);
-      } else {
-        toast.success(response.message);
-        fetchTransactions(pagination.currentPage);
-      }
+      toast.success(response.message);
+      fetchTransactions(pagination.currentPage); 
     } catch (error: any) {
-      console.error("Upload error", error);
-      toast.error("Failed to upload file");
+      if (!(error instanceof AxiosError)) {
+        toast.error("Failed to upload file");
+        console.error(error);
+        return;
+      }
+      const {response,status} = error
+      if(status === 400){
+        toast.error(response?.data?.error || "Failed to upload transactions");
+      }
     } finally {
       setLoading(false);
     }
@@ -76,34 +81,41 @@ export function TransactionDashboard() {
   const handleAddTransaction = async (data: TransactionFormData) => {
     try {
       const response = await api.addTransaction(data);
-      if (response.error) {
-        toast.error(response.error);
-      } else {
-        toast.success("Transaction added successfully");
-        fetchTransactions(pagination.currentPage);
-      }
+      toast.success(response.message);
+      fetchTransactions(pagination.currentPage);
       setShowForm(false);
     } catch (error: any) {
-      console.error("Add error", error);
-      toast.error(error.message || "Failed to add transaction");
+      if (!(error instanceof AxiosError)) {
+        toast.error("Failed to add transaction");
+        console.error(error);
+        return;
+      }
+      const {response,status} = error
+      if(status === 400){
+        toast.error(response?.data?.error || "Failed to add transaction");
+      }
     }
+
   };
 
   const handleEditTransaction = async (data: TransactionFormData) => {
     if (!selectedTransaction) return;
     try {
-      const response = await api.editTransaction(selectedTransaction.id, data);
-      if (response.error) {
-        toast.error(response.error);
-      } else {
-        toast.success("Transaction edited successfully");
-        fetchTransactions(pagination.currentPage);
-      }
+      await api.editTransaction(selectedTransaction.id, data);
+      toast.success("Transaction edited successfully");
+      fetchTransactions(pagination.currentPage);
       setShowForm(false);
       setSelectedTransaction(undefined);
     } catch (error: any) {
-      console.error("Edit error", error);
-      toast.error(error.message || "Failed to update transaction");
+      if (!(error instanceof AxiosError)) {
+        toast.error("Failed to update transaction");
+        console.error(error);
+        return;
+      }
+      const {response,status} = error
+      if(status === 400){
+        toast.error(response?.data?.error || "Failed to update transaction");
+      }
     }
   };
 
@@ -112,15 +124,18 @@ export function TransactionDashboard() {
       return;
     try {
       const response = await api.deleteTransaction(id);
-      if (response.error) {
-        toast.error(response.error);
-      } else {
-        toast.success("Transaction deleted successfully");
-        fetchTransactions(pagination.currentPage);
-      }
+      toast.success(response.message);
+      fetchTransactions(pagination.currentPage);
     } catch (error: any) {
-      console.error("Delete error", error);
-      toast.error(error.message || "Failed to delete transaction");
+      if (!(error instanceof AxiosError)) {
+        toast.error("Failed to delete transaction");
+        console.error(error);
+        return;
+      }
+      const {response,status} = error
+      if(status === 400){
+        toast.error(response?.data?.error || "Failed to delete transaction");
+      }
     }
   };
   return (

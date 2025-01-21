@@ -24,7 +24,7 @@ export function TransactionList({ transactions, onEdit, onDelete }: Props) {
               Amount
             </th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b">
-              Currency
+              Amount(INR)
             </th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b">
               Actions
@@ -50,14 +50,22 @@ export function TransactionList({ transactions, onEdit, onDelete }: Props) {
                 {transaction.description}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 ">
-                {parseFloat(transaction.amount).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: transaction.currency || "USD",
-                  minimumFractionDigits: 2,
-                })}
+                {parseFloat(transaction.amount)
+                  .toLocaleString("en-US", {
+                    style: "currency",
+                    currency: transaction.currency || "USD",
+                    minimumFractionDigits: 2,
+                  })
+                  .replace(/^(\D+)/, "$1 ")}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 uppercase">
-                {transaction.currency}
+                {transaction.amountInr.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "INR",
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
+                  .replace(/^(\D+)/, "$1 ")}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-4">
                 <button

@@ -4,6 +4,7 @@ export interface Transaction {
     description: string;
     amount: string;
     currency: string;
+    amountInr: number;
     isDeleted: boolean;
     createdAt: string;
     updatedAt: string;
