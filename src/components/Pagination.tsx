@@ -3,7 +3,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
 
 interface Props {
@@ -24,15 +24,15 @@ export function Pagination({
   const pageSizeOptions = [5, 10, 20, 50];
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-      <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-        <div>
+    <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-3 sm:px-6">
+      <div className="flex-1 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-2 sm:mb-0">
           <p className="text-sm text-gray-700">
             Page <span className="font-medium">{currentPage}</span> of{" "}
             <span className="font-medium">{totalPages}</span>
           </p>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
           <div className="flex items-center space-x-2">
             <span className="text-sm text-gray-700">Rows per page</span>
             <div className="relative">

@@ -11,7 +11,14 @@ interface Props {
   onSelectAll: (ids: number[]) => void;
 }
 
-export function TransactionList({ transactions, onEdit, onDelete, selectedIds, onSelect, onSelectAll }: Props) {
+export function TransactionList({
+  transactions,
+  onEdit,
+  onDelete,
+  selectedIds,
+  onSelect,
+  onSelectAll,
+}: Props) {
   return (
     <div className="overflow-x-auto rounded-lg shadow-lg">
       <table className="min-w-full bg-white border border-gray-200">

@@ -72,7 +72,9 @@ export function TransactionDashboard() {
       }
       const { response, status } = error;
       if (status === 400) {
-        toast.error(response?.data?.error + " Check the downloaded file for errors");
+        toast.error(
+          response?.data?.error + " Check the downloaded file for errors"
+        );
         // Handle error data and trigger CSV download
         if (response?.data?.data && response.data.data.length > 0) {
           const csvContent = convertErrorsToCSV(response.data.data);
@@ -86,10 +88,11 @@ export function TransactionDashboard() {
 
   const handleAddTransaction = async (data: TransactionFormData) => {
     try {
+      setShowForm(false);
+      setLoading(true);
       const response = await api.addTransaction(data);
       toast.success(response.message);
       fetchTransactions(pagination.currentPage);
-      setShowForm(false);
     } catch (error: any) {
       if (!(error instanceof AxiosError)) {
         toast.error("Failed to add transaction");
@@ -100,16 +103,19 @@ export function TransactionDashboard() {
       if (status === 400) {
         toast.error(response?.data?.error || "Failed to add transaction");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEditTransaction = async (data: TransactionFormData) => {
     if (!selectedTransaction) return;
     try {
+      setShowForm(false);
+      setLoading(true);
       await api.editTransaction(selectedTransaction.id, data);
       toast.success("Transaction edited successfully");
       fetchTransactions(pagination.currentPage);
-      setShowForm(false);
       setSelectedTransaction(undefined);
     } catch (error: any) {
       if (!(error instanceof AxiosError)) {
@@ -121,6 +127,8 @@ export function TransactionDashboard() {
       if (status === 400) {
         toast.error(response?.data?.error || "Failed to update transaction");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -158,9 +166,7 @@ export function TransactionDashboard() {
     if (!selectedIds.length) return;
 
     if (
-      !window.confirm(
-        `Are you sure you want to delete selected transactions?`
-      )
+      !window.confirm(`Are you sure you want to delete selected transactions?`)
     )
       return;
 
@@ -181,9 +187,11 @@ export function TransactionDashboard() {
       <Toaster position="top-center" />
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-700 font-semibold font-semibold">Transactions</h1>
-            <div className="flex space-x-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-700">
+              Transactions
+            </h1>
+            <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
               {selectedIds.length > 0 && (
                 <button
                   onClick={handleDeleteSelected}
@@ -207,15 +215,18 @@ export function TransactionDashboard() {
           </div>
 
           {loading ? (
-            <div className="flex justify-center  items-center h-64">
+            <div className="flex justify-center items-center h-64">
               <div className="relative">
-                <div data-testid="loading-spinner" className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600"></div>
+                <div
+                  data-testid="loading-spinner"
+                  className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600"
+                ></div>
                 <div className="absolute inset-0 m-auto h-8 w-8 rounded-full border-t-2 border-b-2 border-transparent border-gray-400"></div>
               </div>
             </div>
           ) : (
             <>
-              <div className="bg-white shadow rounded-lg">
+              <div className="bg-white shadow rounded-lg overflow-x-auto">
                 <TransactionList
                   transactions={transactions}
                   onEdit={(transaction) => {

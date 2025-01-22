@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
 import { Upload } from "lucide-react";
 
-interface props {
+interface Props {
   onUpload: (file: File) => void;
 }
 
-export function FileUpload({ onUpload }: props) {
+export function FileUpload({ onUpload }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -13,13 +13,13 @@ export function FileUpload({ onUpload }: props) {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    //validate file type
+    // Validate file type
     if (!file.name.endsWith(".csv")) {
       alert("Please upload a CSV file");
       return;
     }
 
-    //validate file size
+    // Validate file size
     if (file.size > 1048576) {
       alert("File size must be less than 1MB");
       return;
@@ -42,8 +42,8 @@ export function FileUpload({ onUpload }: props) {
         Upload CSV
       </button>
       {showModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-60 backdrop-blur-sm overflow-y-auto h-full w-full flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-lg shadow-2xl p-8 w-full max-w-md m-4">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-60 backdrop-blur-sm overflow-y-auto flex items-center justify-center p-4 sm:p-6 lg:p-8 z-50">
+          <div className="relative bg-white rounded-lg shadow-2xl p-6 sm:p-8 w-full max-w-md">
             {/* Close Button */}
             <button
               onClick={() => setShowModal(false)}
@@ -52,15 +52,15 @@ export function FileUpload({ onUpload }: props) {
               <span className="text-2xl font-semibold">&times;</span>
             </button>
 
-            <div className="flex flex-col items-center space-y-8">
+            <div className="flex flex-col items-center space-y-6 sm:space-y-8">
               {/* Icon Container */}
-              <div className="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center shadow-md">
-                <Upload className="w-12 h-12 text-indigo-600" />
+              <div className="w-16 h-16 sm:w-24 sm:h-24 bg-indigo-100 rounded-full flex items-center justify-center shadow-md">
+                <Upload className="w-8 h-8 sm:w-12 sm:h-12 text-indigo-600" />
               </div>
 
               {/* Text Content */}
               <div className="text-center">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                   Upload CSV File
                 </h3>
                 <p className="text-sm text-gray-500">
@@ -81,7 +81,7 @@ export function FileUpload({ onUpload }: props) {
                 />
                 <label
                   htmlFor="file-upload"
-                  className="w-full flex flex-col items-center justify-center px-6 py-4 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200"
+                  className="w-full flex flex-col items-center justify-center px-4 py-3 sm:px-6 sm:py-4 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200"
                 >
                   <p className="text-sm text-gray-600 font-medium">
                     Click to select file
