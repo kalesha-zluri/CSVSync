@@ -77,6 +77,7 @@ export function FileUpload({ onUpload }: props) {
                   onChange={handleFileChange}
                   className="hidden"
                   id="file-upload"
+                  aria-label="file-upload"
                 />
                 <label
                   htmlFor="file-upload"

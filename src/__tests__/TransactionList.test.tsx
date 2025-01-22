@@ -5,6 +5,9 @@ import { TransactionList } from "../components/TransactionList";
 describe("TransactionList", () => {
   const mockOnEdit = jest.fn();
   const mockOnDelete = jest.fn();
+  const mockOnSelect = jest.fn();
+  const mockOnSelectAll = jest.fn();
+  const mockSelectedIds: number[] = [1];
 
   const sampleTransactions: any[] = [
     {
@@ -35,6 +38,9 @@ describe("TransactionList", () => {
         transactions={[]}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
+        selectedIds={mockSelectedIds}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
       />
     );
 
@@ -51,6 +57,9 @@ describe("TransactionList", () => {
         transactions={sampleTransactions}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
+        selectedIds={mockSelectedIds}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
       />
     );
 
@@ -77,6 +86,9 @@ describe("TransactionList", () => {
         transactions={sampleTransactions}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
+        selectedIds={mockSelectedIds}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
       />
     );
 
@@ -93,6 +105,9 @@ describe("TransactionList", () => {
         transactions={sampleTransactions}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
+        selectedIds={mockSelectedIds}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
       />
     );
 
@@ -109,6 +124,9 @@ describe("TransactionList", () => {
         transactions={[]}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
+        selectedIds={mockSelectedIds}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
       />
     );
 
@@ -122,13 +140,16 @@ describe("TransactionList", () => {
         transactions={sampleTransactions}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
+        selectedIds={mockSelectedIds}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
       />
     );
 
     const rows = screen.getAllByRole("row").slice(1); // Skip header row
     rows.forEach((row) => {
-      expect(row).toHaveClass("hover:bg-gray-50");
-      expect(row).toHaveClass("transition-colors");
+        expect(row).toHaveClass("hover:bg-gray-100");
+        expect(row).toHaveClass("transition-colors");
     });
   });
 
@@ -146,11 +167,126 @@ describe("TransactionList", () => {
         transactions={transactionsWithLongDesc}
         onEdit={mockOnEdit}
         onDelete={mockOnDelete}
+        selectedIds={mockSelectedIds}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
       />
     );
 
     const descriptionCell = screen.getByTitle(longDescription);
     expect(descriptionCell).toHaveClass("truncate");
     expect(descriptionCell).toHaveClass("max-w-xs");
+  });
+
+  it("renders the select all checkbox correctly", () => {
+    render(
+      <TransactionList
+        transactions={sampleTransactions}
+        onEdit={mockOnEdit}
+        onDelete={mockOnDelete}
+        selectedIds={mockSelectedIds}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
+      />
+    );
+
+    const selectAllCheckbox = screen.getByTestId("select-all-checkbox");
+    expect(selectAllCheckbox).toBeInTheDocument();
+    expect(selectAllCheckbox).not.toBeChecked();
+  });
+
+  it("calls onSelectAll when select all checkbox is clicked", () => {
+    render(
+      <TransactionList
+        transactions={sampleTransactions}
+        onEdit={mockOnEdit}
+        onDelete={mockOnDelete}
+        selectedIds={mockSelectedIds}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
+      />
+    );
+
+    const selectAllCheckbox = screen.getByTestId("select-all-checkbox");
+    fireEvent.click(selectAllCheckbox);
+
+    expect(mockOnSelectAll).toHaveBeenCalledTimes(1);
+    expect(mockOnSelectAll).toHaveBeenCalledWith([1, 2]);
+  });
+
+  it("calls onSelect when individual checkbox is clicked", () => {
+    render(
+      <TransactionList
+        transactions={sampleTransactions}
+        onEdit={mockOnEdit}
+        onDelete={mockOnDelete}
+        selectedIds={mockSelectedIds}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
+      />
+    );
+
+    const checkboxes = screen.getAllByRole("checkbox");
+    fireEvent.click(checkboxes[1]); // Click first transaction checkbox
+
+    expect(mockOnSelect).toHaveBeenCalledTimes(1);
+    expect(mockOnSelect).toHaveBeenCalledWith(sampleTransactions[0].id);
+  });
+
+  it("calls onSelectAll with all transaction ids when select all checkbox is checked", () => {
+    render(
+      <TransactionList
+        transactions={sampleTransactions}
+        onEdit={mockOnEdit}
+        onDelete={mockOnDelete}
+        selectedIds={[]}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
+      />
+    );
+
+    const selectAllCheckbox = screen.getByTestId("select-all-checkbox");
+    fireEvent.click(selectAllCheckbox);
+
+    expect(mockOnSelectAll).toHaveBeenCalledTimes(1);
+    expect(mockOnSelectAll).toHaveBeenCalledWith([1, 2]);
+  });
+
+  it("calls onSelectAll with an empty array when select all checkbox is unchecked", () => {
+    render(
+      <TransactionList
+        transactions={sampleTransactions}
+        onEdit={mockOnEdit}
+        onDelete={mockOnDelete}
+        selectedIds={[1, 2]}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
+      />
+    );
+
+    const selectAllCheckbox = screen.getByTestId("select-all-checkbox");
+    fireEvent.click(selectAllCheckbox);
+
+    expect(mockOnSelectAll).toHaveBeenCalledTimes(1);
+    expect(mockOnSelectAll).toHaveBeenCalledWith([]);
+  });
+
+  it("calls onSelectAll with all transaction ids when select all checkbox is checked", () => {
+    render(
+      <TransactionList
+        transactions={sampleTransactions}
+        onEdit={mockOnEdit}
+        onDelete={mockOnDelete}
+        selectedIds={[]}
+        onSelect={mockOnSelect}
+        onSelectAll={mockOnSelectAll}
+      />
+    );
+
+    const selectAllCheckbox = screen.getByTestId("select-all-checkbox");
+    fireEvent.click(selectAllCheckbox);
+
+    expect(mockOnSelectAll).toHaveBeenCalledTimes(1);
+    expect(mockOnSelectAll).toHaveBeenCalledWith([1, 2]);
   });
 });

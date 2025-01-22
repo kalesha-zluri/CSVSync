@@ -19,6 +19,7 @@ export function TransactionList({ transactions, onEdit, onDelete, selectedIds, o
           <tr className="divide-x divide-gray-300">
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b">
               <input
+                data-testid="select-all-checkbox"
                 type="checkbox"
                 checked={selectedIds.length === transactions.length}
                 onChange={(e) =>
