@@ -209,7 +209,7 @@ export function TransactionDashboard() {
           {loading ? (
             <div className="flex justify-center  items-center h-64">
               <div className="relative">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600"></div>
+                <div data-testid="loading-spinner" className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600"></div>
                 <div className="absolute inset-0 m-auto h-8 w-8 rounded-full border-t-2 border-b-2 border-transparent border-gray-400"></div>
               </div>
             </div>
