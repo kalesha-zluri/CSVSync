@@ -63,7 +63,7 @@ describe("Pagination", () => {
     );
 
     fireEvent.change(screen.getByRole("combobox"), { target: { value: "20" } });
-    expect(mockOnPageSizeChange).toHaveBeenCalledWith(20);
+    expect(mockOnPageSizeChange).toHaveBeenCalledWith(20,true);
   });
 
   it("disables pagination buttons correctly", () => {
