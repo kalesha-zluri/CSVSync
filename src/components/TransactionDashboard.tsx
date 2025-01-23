@@ -246,7 +246,12 @@ export function TransactionDashboard() {
                   totalPages={pagination.totalPages}
                   transactionsPerPage={transactionsPerPage}
                   onPageChange={(page) => fetchTransactions(page)}
-                  onPageSizeChange={(size) => setTransactionsPerPage(size)}
+                  onPageSizeChange={(size, resetPage) => {
+                    if (resetPage) {
+                      pagination.currentPage = 1;
+                    }
+                    setTransactionsPerPage(size);
+                  }}
                 />
               </div>
             </>

@@ -11,7 +11,7 @@ interface Props {
   totalPages: number;
   transactionsPerPage: number;
   onPageChange: (page: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
+  onPageSizeChange: (pageSize: number, resetPage: boolean) => void;
 }
 
 export function Pagination({
@@ -22,6 +22,13 @@ export function Pagination({
   onPageSizeChange,
 }: Props) {
   const pageSizeOptions = [5, 10, 20, 50];
+
+  const handlePageSizeChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const newSize = Number(event.target.value);
+    onPageSizeChange(newSize, true); // Pass true to reset the page to 1
+  };
 
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-3 sm:px-6">
@@ -38,7 +45,7 @@ export function Pagination({
             <div className="relative">
               <select
                 value={transactionsPerPage}
-                onChange={(e) => onPageSizeChange(Number(e.target.value))}
+                onChange={handlePageSizeChange}
                 className="relative inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none pr-8"
               >
                 {pageSizeOptions.map((size) => (
