@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { TransactionFormData } from './types';
 
-const API_BASE_URL = 'http://ec2-3-110-171-187.ap-south-1.compute.amazonaws.com:4000/api/v1/transactions';
+const API_BASE_URL = "https://tabgiqz57a.execute-api.ap-south-1.amazonaws.com/csvsync/api/v1/transactions";
 
 //axios instance with default config
 const axiosInstance = axios.create({
