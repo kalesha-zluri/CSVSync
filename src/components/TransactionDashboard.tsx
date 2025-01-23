@@ -71,7 +71,7 @@ export function TransactionDashboard() {
         return;
       }
       const { response, status } = error;
-      if (status === 400) {
+      if (status === 400 ) {
         toast.error(
           response?.data?.error + " Check the downloaded file for errors"
         );
@@ -80,6 +80,9 @@ export function TransactionDashboard() {
           const csvContent = convertErrorsToCSV(response.data.data);
           triggerDownloadBlob(csvContent, "upload_errors.csv");
         }
+      }
+      if(status === 500){
+        toast.error("Internal Server error! Failed to upload file");
       }
     } finally {
       setLoading(false);
@@ -124,7 +127,7 @@ export function TransactionDashboard() {
         return;
       }
       const { response, status } = error;
-      if (status === 400) {
+      if (status === 400 || status=== 500) {
         toast.error(response?.data?.error || "Failed to update transaction");
       }
     } finally {
@@ -146,7 +149,7 @@ export function TransactionDashboard() {
         return;
       }
       const { response, status } = error;
-      if (status === 400) {
+      if (status === 400 || status === 500) {
         toast.error(response?.data?.error || "Failed to delete transaction");
       }
     }
