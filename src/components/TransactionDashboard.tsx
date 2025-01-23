@@ -100,7 +100,7 @@ export function TransactionDashboard() {
         return;
       }
       const { response, status } = error;
-      if (status === 400) {
+      if (status === 400 || status === 500) {
         toast.error(response?.data?.error || "Failed to add transaction");
       }
     } finally {
