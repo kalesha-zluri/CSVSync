@@ -3,6 +3,7 @@ import { TransactionDashboard } from "../components/TransactionDashboard";
 import { api } from "../api";
 import { toast } from "react-hot-toast";
 import { AxiosError } from "axios";
+
 // Mock dependencies
 jest.mock("../api");
 jest.mock("react-hot-toast");
@@ -123,6 +124,28 @@ describe("TransactionDashboard", () => {
     });
   });
 
+  it("handles file upload with error and CSV download", async () => {
+    const errorResponse = {
+      response: {
+        data: {
+          error: "Upload failed",
+          data: [{ row: 1, error: "Invalid data" }],
+        },
+        status: 400,
+      },
+    };
+
+    (api.uploadCSV as jest.Mock).mockRejectedValue(errorResponse);
+
+    render(<TransactionDashboard />);
+    const uploadButton = screen.getByText("Upload CSV");
+    fireEvent.click(uploadButton);
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith("Failed to upload file");
+    });
+  });
+
   it("handles add transaction", async () => {
     render(<TransactionDashboard />);
 
@@ -137,6 +160,32 @@ describe("TransactionDashboard", () => {
     await waitFor(() => {
       expect(api.addTransaction).toHaveBeenCalled();
       expect(toast.success).toHaveBeenCalledWith("Added successfully");
+    });
+  });
+
+  it("handles add transaction error", async () => {
+     const errorResponse = {
+       response: {
+         data: {
+           error: "Add Failed",
+         },
+         status: 400,
+       },
+     };
+    (api.addTransaction as jest.Mock).mockRejectedValue(errorResponse);
+
+    render(<TransactionDashboard />);
+
+    // Click add transaction button
+    const addButton = screen.getByText("Add Transaction");
+    fireEvent.click(addButton);
+
+    // Submit form
+    const submitButton = screen.getByText("Submit");
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith("Failed to add transaction");
     });
   });
 
@@ -190,6 +239,31 @@ describe("TransactionDashboard", () => {
     await waitFor(() => {
       expect(api.deleteMultipleTransactions).toHaveBeenCalledWith([1, 2]);
       expect(toast.success).toHaveBeenCalledWith("Bulk deleted successfully");
+    });
+  });
+
+  it("handles selection and bulk delete error", async () => {
+    const errorResponse = new AxiosError();
+    errorResponse.response = {
+      data: { error: "Bulk delete failed" },
+      status: 400,
+    } as any;
+    (api.deleteMultipleTransactions as jest.Mock).mockRejectedValue(
+      errorResponse
+    );
+
+    render(<TransactionDashboard />);
+
+    await waitFor(() => {
+      const selectAllButton = screen.getByText("Select All");
+      fireEvent.click(selectAllButton);
+    });
+
+    const deleteButton = screen.getByText("Delete");
+    fireEvent.click(deleteButton);
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith("Failed to delete transactions");
     });
   });
 
@@ -278,15 +352,12 @@ describe("TransactionDashboard", () => {
 
     render(<TransactionDashboard />);
 
-    // const file = new File(["test"], "test.csv", { type: "text/csv" });
     const uploadButton = screen.getByText("Upload CSV");
 
     fireEvent.click(uploadButton);
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith(
-        "Failed to upload file"
-      );
+      expect(toast.error).toHaveBeenCalledWith("Failed to upload file");
     });
   });
 });

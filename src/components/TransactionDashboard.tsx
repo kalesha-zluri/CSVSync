@@ -62,8 +62,8 @@ export function TransactionDashboard() {
       setLoading(true);
       const response = await api.uploadCSV(file);
       console.log(response);
-      toast.success(response.message);
       fetchTransactions(pagination.currentPage);
+      toast.success(response.message);
     } catch (error: any) {
       if (!(error instanceof AxiosError)) {
         toast.error("Failed to upload file");
@@ -71,7 +71,7 @@ export function TransactionDashboard() {
         return;
       }
       const { response, status } = error;
-      if (status === 400 ) {
+      if (status === 400 || status === 500) {
         toast.error(
           response?.data?.error || "Failed to upload file"
         );
@@ -80,9 +80,6 @@ export function TransactionDashboard() {
           const csvContent = convertErrorsToCSV(response.data.data);
           triggerDownloadBlob(csvContent, "upload_errors.csv");
         }
-      }
-      if(status === 500){
-        toast.error("Internal Server error! Failed to upload file");
       }
     } finally {
       setLoading(false);

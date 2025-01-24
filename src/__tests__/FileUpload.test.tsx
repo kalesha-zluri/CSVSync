@@ -70,4 +70,35 @@ describe("FileUpload", () => {
     // Check that the modal is closed after file upload
     expect(screen.queryByText("Upload CSV File")).not.toBeInTheDocument();
   });
+
+  it("toggles the instructions visibility", () => {
+    render(<FileUpload onUpload={mockOnUpload} />);
+    fireEvent.click(screen.getByText("Upload CSV"));
+
+    const instructionsButton = screen.getByText("Instructions");
+    fireEvent.click(instructionsButton);
+
+    // Check that instructions are visible
+    expect(screen.getByText(/Date format should be:/)).toBeInTheDocument();
+    expect(screen.getByText(/DD-MM-YYYY/)).toBeInTheDocument();
+    expect(screen.getByText(/Valid currencies include:/)).toBeInTheDocument();
+    expect(screen.getByText(/USD, EUR, GBP, etc./)).toBeInTheDocument();
+
+    // Check that instructions are hidden when clicked again
+    fireEvent.click(instructionsButton);
+    expect(
+      screen.queryByText(/Date format should be:/)
+    ).not.toBeInTheDocument();
+  });
+
+  it("closes the modal when the close button is clicked", () => {
+    render(<FileUpload onUpload={mockOnUpload} />);
+    fireEvent.click(screen.getByText("Upload CSV"));
+
+    const closeButton = screen.getByText("×");
+    fireEvent.click(closeButton);
+
+    // Check that the modal is closed after clicking close button
+    expect(screen.queryByText("Upload CSV File")).not.toBeInTheDocument();
+  });
 });
