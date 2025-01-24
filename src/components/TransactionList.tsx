@@ -20,7 +20,7 @@ export function TransactionList({
   onSelectAll,
 }: Props) {
   return (
-    <div className="overflow-x-auto rounded-lg shadow-lg">
+    <div className="overflow-x-auto rounded-lg">
       <table className="min-w-full bg-white border border-gray-200">
         <thead className="bg-gray-100">
           <tr >
