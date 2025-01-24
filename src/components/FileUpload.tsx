@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Upload } from "lucide-react";
+import { Upload, Download, Info } from "lucide-react";
 
 interface Props {
   onUpload: (file: File) => void;
@@ -8,6 +8,7 @@ interface Props {
 export function FileUpload({ onUpload }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -30,6 +31,18 @@ export function FileUpload({ onUpload }: Props) {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+  };
+
+  const handleDownloadTemplate = () => {
+    const csvContent =
+      "data:text/csv;charset=utf-8," + "Date,Description,Amount,Currency\n";
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "template.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -66,6 +79,35 @@ export function FileUpload({ onUpload }: Props) {
                 <p className="text-sm text-gray-500">
                   Select a CSV file to upload your transactions
                 </p>
+                <p className="text-sm text-gray-500 mt-6">
+                  <button
+                    onClick={handleDownloadTemplate}
+                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 transition-colors duration-200"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Template
+                  </button>
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  <button
+                    onClick={() => setShowInstructions(!showInstructions)}
+                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
+                  >
+                    <Info className="w-4 h-4 mr-2" />
+                    Instructions
+                  </button>
+                </p>
+                {showInstructions && (
+                  <div className="text-left text-sm text-gray-600 mt-4">
+                    <p>
+                      Date format should be: <strong>DD-MM-YYYY</strong>
+                    </p>
+                    <p>
+                      Valid currencies include:{" "}
+                      <strong>USD, EUR, GBP, etc.</strong>
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* File Upload Area */}

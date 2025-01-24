@@ -73,7 +73,7 @@ export function TransactionDashboard() {
       const { response, status } = error;
       if (status === 400 ) {
         toast.error(
-          response?.data?.error + " Check the downloaded file for errors"
+          response?.data?.error || "Failed to upload file"
         );
         // Handle error data and trigger CSV download
         if (response?.data?.data && response.data.data.length > 0) {
@@ -245,7 +245,9 @@ export function TransactionDashboard() {
                   currentPage={pagination.currentPage}
                   totalPages={pagination.totalPages}
                   transactionsPerPage={transactionsPerPage}
-                  onPageChange={(page) => fetchTransactions(page)}
+                  onPageChange={(page) => {
+                    setSelectedIds([]);
+                    fetchTransactions(page);}}
                   onPageSizeChange={(size, resetPage) => {
                     if (resetPage) {
                       pagination.currentPage = 1;
