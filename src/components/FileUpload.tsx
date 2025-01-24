@@ -133,6 +133,14 @@ export function FileUpload({ onUpload }: Props) {
                   </p>
                 </label>
               </div>
+
+              {/* Disclaimer */}
+              <div className="text-left text-sm text-gray-600 mt-4">
+                <p>
+                  <strong>Disclaimer:</strong> If any errors are found in the
+                  data, a file with the errors will be downloaded.
+                </p>
+              </div>
             </div>
           </div>
         </div>
