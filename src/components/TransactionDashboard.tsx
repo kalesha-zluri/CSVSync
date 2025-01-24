@@ -72,9 +72,7 @@ export function TransactionDashboard() {
       }
       const { response, status } = error;
       if (status === 400 || status === 500) {
-        toast.error(
-          response?.data?.error || "Failed to upload file"
-        );
+        toast.error(response?.data?.error || "Failed to upload file");
         // Handle error data and trigger CSV download
         if (response?.data?.data && response.data.data.length > 0) {
           const csvContent = convertErrorsToCSV(response.data.data);
@@ -124,7 +122,7 @@ export function TransactionDashboard() {
         return;
       }
       const { response, status } = error;
-      if (status === 400 || status=== 500) {
+      if (status === 400 || status === 500) {
         toast.error(response?.data?.error || "Failed to update transaction");
       }
     } finally {
@@ -227,31 +225,40 @@ export function TransactionDashboard() {
           ) : (
             <>
               <div className="bg-white shadow rounded-lg overflow-x-auto">
-                <TransactionList
-                  transactions={transactions}
-                  onEdit={(transaction) => {
-                    setSelectedTransaction(transaction);
-                    setShowForm(true);
-                  }}
-                  onDelete={handleDeleteTransaction}
-                  selectedIds={selectedIds}
-                  onSelect={handleSelect}
-                  onSelectAll={handleSelectAll}
-                />
-                <Pagination
-                  currentPage={pagination.currentPage}
-                  totalPages={pagination.totalPages}
-                  transactionsPerPage={transactionsPerPage}
-                  onPageChange={(page) => {
-                    setSelectedIds([]);
-                    fetchTransactions(page);}}
-                  onPageSizeChange={(size, resetPage) => {
-                    if (resetPage) {
-                      pagination.currentPage = 1;
-                    }
-                    setTransactionsPerPage(size);
-                  }}
-                />
+                {transactions.length === 0 ? (
+                  <div className="p-6 text-center text-gray-500">
+                    <p>No transactions available</p>
+                  </div>
+                ) : (
+                  <>
+                    <TransactionList
+                      transactions={transactions}
+                      onEdit={(transaction) => {
+                        setSelectedTransaction(transaction);
+                        setShowForm(true);
+                      }}
+                      onDelete={handleDeleteTransaction}
+                      selectedIds={selectedIds}
+                      onSelect={handleSelect}
+                      onSelectAll={handleSelectAll}
+                    />
+                    <Pagination
+                      currentPage={pagination.currentPage}
+                      totalPages={pagination.totalPages}
+                      transactionsPerPage={transactionsPerPage}
+                      onPageChange={(page) => {
+                        setSelectedIds([]);
+                        fetchTransactions(page);
+                      }}
+                      onPageSizeChange={(size, resetPage) => {
+                        if (resetPage) {
+                          pagination.currentPage = 1;
+                        }
+                        setTransactionsPerPage(size);
+                      }}
+                    />
+                  </>
+                )}
               </div>
             </>
           )}
