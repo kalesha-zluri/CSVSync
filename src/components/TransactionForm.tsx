@@ -140,6 +140,7 @@ export function TransactionForm({ transaction, onSubmit, onClose }: Props) {
                 const date = e.target.value.split("-").reverse().join("-");
                 setFormData((prev) => ({ ...prev, date }));
               }}
+              max={new Date().toISOString().split("T")[0]}
               className="block w-full h-10 sm:h-12 px-4 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
               required
             />
