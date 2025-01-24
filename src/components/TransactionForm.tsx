@@ -112,6 +112,14 @@ export function TransactionForm({ transaction, onSubmit, onClose }: Props) {
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
                 <option value="GBP">GBP</option>
+                <option value="JPY">JPY</option>
+                <option value="AUD">AUD</option>
+                <option value="CAD">CAD</option>
+                <option value="CHF">CHF</option>
+                <option value="CNY">CNY</option>
+                <option value="INR">INR</option>
+                <option value="RUB">RUB</option>
+                <option value="BRL">BRL</option>
               </select>
             </div>
           </div>
