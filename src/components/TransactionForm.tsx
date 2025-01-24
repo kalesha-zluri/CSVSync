@@ -136,6 +136,7 @@ export function TransactionForm({ transaction, onSubmit, onClose }: Props) {
               id="date"
               type="date"
               value={formData.date.split("-").reverse().join("-")}
+              onKeyDown={(e) => e.preventDefault()}
               onChange={(e) => {
                 const date = e.target.value.split("-").reverse().join("-");
                 setFormData((prev) => ({ ...prev, date }));
