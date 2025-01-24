@@ -23,7 +23,7 @@ export function TransactionList({
     <div className="overflow-x-auto rounded-lg shadow-lg">
       <table className="min-w-full bg-white border border-gray-200">
         <thead className="bg-gray-100">
-          <tr className="divide-x divide-gray-300">
+          <tr >
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b">
               <input
                 data-testid="select-all-checkbox"
@@ -61,7 +61,7 @@ export function TransactionList({
           {transactions.map((transaction) => (
             <tr
               key={transaction.id}
-              className="divide-x divide-gray-300 hover:bg-gray-100 transition-colors duration-150 ease-in-out"
+              className="hover:bg-gray-100 transition-colors duration-150 ease-in-out"
             >
               <td className="px-6 py-4 whitespace-nowrap">
                 <input
