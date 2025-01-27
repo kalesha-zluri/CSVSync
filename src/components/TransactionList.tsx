@@ -22,7 +22,7 @@ export function TransactionList({
     <div className="overflow-x-auto rounded-lg">
       <table className="min-w-full bg-white border border-gray-200">
         <thead className="bg-gray-100">
-          <tr >
+          <tr>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b">
               <input
                 data-testid="select-all-checkbox"
@@ -48,7 +48,7 @@ export function TransactionList({
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b">
               Amount(INR)
             </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b">
+            <th className="px-6 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider border-b">
               Actions
             </th>
           </tr>
@@ -101,7 +101,7 @@ export function TransactionList({
                   })
                   .replace(/^(\D+)/, "$1 ")}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-4">
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex justify-center">
                 <button
                   onClick={() => onEdit(transaction)}
                   className="text-indigo-200 hover:text-indigo-600 inline-flex items-center transition-colors"
