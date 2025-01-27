@@ -109,12 +109,6 @@ export function TransactionList({
                 >
                   <Edit2 className="w-5 h-5" />
                 </button>
-                <button
-                  onClick={() => onDelete(transaction.id)}
-                  className="text-red-200 hover:text-red-600 inline-flex items-center transition-colors"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
               </td>
             </tr>
           ))}
