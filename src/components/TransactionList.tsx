@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2 } from "lucide-react";
 import { Transaction } from "../types";
 
 interface Props {
@@ -14,7 +14,6 @@ interface Props {
 export function TransactionList({
   transactions,
   onEdit,
-  onDelete,
   selectedIds,
   onSelect,
   onSelectAll,
