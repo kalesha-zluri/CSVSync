@@ -88,6 +88,7 @@ export function TransactionDashboard() {
     try {
       setShowForm(false);
       setLoading(true);
+      data.description = data.description.trim();
       const response = await api.addTransaction(data);
       toast.success(response.message);
       fetchTransactions(pagination.currentPage);
@@ -111,6 +112,7 @@ export function TransactionDashboard() {
     try {
       setShowForm(false);
       setLoading(true);
+      data.description = data.description.trim();
       await api.editTransaction(selectedTransaction.id, data);
       toast.success("Transaction edited successfully");
       fetchTransactions(pagination.currentPage);
