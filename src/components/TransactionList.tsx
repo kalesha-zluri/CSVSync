@@ -77,7 +77,7 @@ export function TransactionList({
                 )}
               </td>
               <td
-                className="px-6 py-4 text-sm text-gray-800 truncate max-w-xs"
+                className="px-6 py-4 text-sm text-gray-800 whitespace-pre-wrap truncate max-w-xs"
                 title={transaction.description}
               >
                 {transaction.description}
