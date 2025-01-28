@@ -18,6 +18,13 @@ export function TransactionList({
   onSelect,
   onSelectAll,
 }: Props) {
+  const handleCopy = (event: React.ClipboardEvent<HTMLTableCellElement>) => {
+    const fullDescription = event.currentTarget.getAttribute('data-full-description');
+    if (fullDescription) {
+      event.clipboardData.setData('text/plain', fullDescription);
+      event.preventDefault(); // Prevent the default copy behavior
+    }
+  };
   return (
     <div className="overflow-x-auto rounded-lg">
       <table className="min-w-full bg-white border border-gray-200">
@@ -77,10 +84,12 @@ export function TransactionList({
                 )}
               </td>
               <td
-                className="px-6 py-4 text-sm text-gray-800 whitespace-pre-wrap truncate max-w-xs"
+                className="px-6 py-4 text-sm text-gray-800 truncate max-w-xs whitespace-pre-wrap"
                 title={transaction.description}
+                data-full-description={transaction.description}
+                onCopy={handleCopy}
               >
-                {transaction.description}
+                {transaction.description.length > 50 ? `${transaction.description.substring(0, 50)}...` : transaction.description}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 ">
                 {parseFloat(transaction.amount)
